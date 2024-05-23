@@ -58,7 +58,8 @@ public class SQLInjectionServlet extends AbstractServlet {
     }
 
     private String selectUsers(String name, String password, HttpServletRequest req) {
-        
+        return "";
+        /*
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -85,5 +86,6 @@ public class SQLInjectionServlet extends AbstractServlet {
             Closer.close(conn);
         }
         return result;
+        */
     }
 }
