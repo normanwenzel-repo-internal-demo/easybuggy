@@ -58,21 +58,18 @@
       *
       * @param part A part or form item that was received within a <code>multipart/form-data</code> POST request.
       */
-     public static String getFileName(final Part part) {
+@@ -56,1 +57,5 @@
+-    public static String getFileName(final Part part) {
++      String filePath = savePath + File.separator + fileName;
++      if (!filePath.startsWith(new File(savePath).getCanonicalPath())) {
++        throw new SecurityException("Attempt to read file outside of the base directory.");
++      }
++
          for (String content : part.getHeader("content-disposition").split(";")) {
              if (content.trim().startsWith("filename")) {
                  return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
              }
          }
-@@ -62,1 +63,8 @@
--        return null;
-+      String savePath = getServletContext().getRealPath("");
-+      String fullPath = savePath + File.separator + fileName;
-+      File file = new File(fullPath);
-+      String normalizedPath = file.getCanonicalPath();
-+      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
-+        return false;
-+      }
-+
+         return null;
      }
  }
