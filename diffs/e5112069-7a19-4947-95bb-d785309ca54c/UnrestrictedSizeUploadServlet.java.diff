@@ -3,8 +3,10 @@
 @@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.vulnerabilities;
  
-@@ -3,0 +3,2 @@
-+import java.nio.file.Paths;
+@@ -3,0 +3,4 @@
++import javax.servlet.http.Part;
++import javax.imageio.ImageIO;
++import java.io.IOException;
 +import java.io.File;
  import java.awt.image.BufferedImage;
  import java.awt.image.WritableRaster;
@@ -85,9 +87,10 @@
              }
              boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
  
-@@ -82,1 +84,10 @@
+@@ -82,2 +86,22 @@
 -            // Reverse the color of the upload image
-+      String savePath = getServletContext().getRealPath("");
+-            if (!isConverted) {
++      String savePath = getServletContext().getRealPath(UPLOAD_DIR);
 +      String fullPath = savePath + File.separator + fileName;
 +      File file = new File(fullPath);
 +      String normalizedPath = file.getCanonicalPath();
@@ -97,7 +100,18 @@
 +        return;
 +      }
 +
-             if (!isConverted) {
++      boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
++      if (!isConverted) {
++        String filePath = savePath + File.separator + fileName;
++        String normalizedFilePath = new File(filePath).getCanonicalPath();
++        if (!normalizedFilePath.startsWith(new File(savePath).getCanonicalPath())) {
++          req.setAttribute("errorMessage", getErrMsg("msg.invalid.file.path", locale));
++          doGet(req, res);
++          return;
++        }
++        isConverted = reverseColor(filePath);
++      }
++
                  isConverted = reverseColor(new File(savePath + File.separator + fileName).getAbsolutePath());
              }
  
