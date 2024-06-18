@@ -76,28 +76,27 @@
              return;
          }
          try {
-@@ -76,1 +76,14 @@
--            String fileName = MultiPartFileUtils.getFileName(filePart);
-+      String fileName = MultiPartFileUtils.getFileName(filePart);
-+      if (StringUtils.isBlank(fileName)) {
-+          doGet(req, res);
-+          return;
-+      }
-+      String filePath = savePath + File.separator + fileName;
-+      File file = new File(filePath);
-+      String normalizedPath = file.getCanonicalPath();
-+      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
-+          doGet(req, res);
-+          return;
-+      }
-+      boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
-+
+             String fileName = MultiPartFileUtils.getFileName(filePart);
              if (StringUtils.isBlank(fileName)) {
                  doGet(req, res);
                  return;
              }
-             boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
+@@ -81,1 +81,11 @@
+-            boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
++      String fileName = MultiPartFileUtils.getFileName(filePart);
++      if (StringUtils.isBlank(fileName)) {
++        doGet(req, res);
++        return;
++      }
++      String normalizedPath = new File(savePath + File.separator + fileName).getCanonicalPath();
++      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
++        doGet(req, res);
++        return;
++      }
++      boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
  
+@@ -83,0 +93,1 @@
++
              if (!isConverted) {
                  isConverted = convert2GrayScale(new File(savePath + File.separator + fileName).getAbsolutePath());
              }
@@ -121,7 +120,16 @@
      }
  
      // Convert color image into gray scale image.
-     private boolean convert2GrayScale(String fileName) throws IOException {
+@@ -106,1 +117,8 @@
+-    private boolean convert2GrayScale(String fileName) throws IOException {
++      boolean isConverted = false;
++      try {
++        String normalizedPath = new File(fileName).getCanonicalPath();
++        if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
++          return false;
++        }
++        BufferedImage image = ImageIO.read(new File(fileName));
++
          boolean isConverted = false;
          try {
              // Convert the file into gray scale image.
@@ -150,7 +158,11 @@
                  }
              }
              // Output the image
-             ImageIO.write(image, "png", new File(fileName));
+@@ -135,1 +153,3 @@
+-            ImageIO.write(image, "png", new File(fileName));
++      ImageIO.write(image, "png", new File(fileName));
++      isConverted = true;
++
              isConverted = true;
          } catch (Exception e) {
              // Log and ignore the exception
