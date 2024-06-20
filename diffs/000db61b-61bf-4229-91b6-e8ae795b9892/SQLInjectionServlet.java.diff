@@ -64,26 +64,16 @@
      }
  
      private String selectUsers(String name, String password, HttpServletRequest req) {
-@@ -62,1 +63,1 @@
--        
-+
+         
          Connection conn = null;
-@@ -64,1 +65,1 @@
--        Statement stmt = null;
-+        PreparedStatement stmt = null;
+         Statement stmt = null;
          ResultSet rs = null;
          String result = getErrMsg("msg.error.user.not.exist", req.getLocale());
          try {
              conn = DBClient.getConnection();
-@@ -69,3 +70,5 @@
--            stmt = conn.createStatement();
--            rs = stmt.executeQuery("SELECT name, secret FROM users WHERE ispublic = 'true' AND name='" + name
--                    + "' AND password='" + password + "'");
-+            String sql = "SELECT name, secret FROM users WHERE ispublic = 'true' AND name=? AND password=?";
-+            stmt = conn.prepareStatement(sql);
-+            stmt.setString(1, name);
-+            stmt.setString(2, password);
-+            rs = stmt.executeQuery();
+             stmt = conn.createStatement();
+             rs = stmt.executeQuery("SELECT name, secret FROM users WHERE ispublic = 'true' AND name='" + name
+                     + "' AND password='" + password + "'");
              StringBuilder sb = new StringBuilder();
              while (rs.next()) {
                  sb.append("<tr><td>" + rs.getString("name") + "</td><td>" + rs.getString("secret") + "</td></tr>");
@@ -104,16 +94,26 @@
      }
  
      private String selectUsers2(String name, String password, HttpServletRequest req) {
-         
+@@ -92,1 +93,1 @@
+-        
++
          Connection conn = null;
-         Statement stmt = null;
+@@ -94,1 +95,1 @@
+-        Statement stmt = null;
++        PreparedStatement stmt = null;
          ResultSet rs = null;
          String result = getErrMsg("msg.error.user.not.exist", req.getLocale());
          try {
              conn = DBClient.getConnection();
-             stmt = conn.createStatement();
-             rs = stmt.executeQuery("SELECT name, secret FROM users WHERE ispublic = 'true' AND name='" + name
-                     + "' AND password='" + password + "'");
+@@ -99,3 +100,5 @@
+-            stmt = conn.createStatement();
+-            rs = stmt.executeQuery("SELECT name, secret FROM users WHERE ispublic = 'true' AND name='" + name
+-                    + "' AND password='" + password + "'");
++            String sql = "SELECT name, secret FROM users WHERE ispublic = 'true' AND name=? AND password=?";
++            stmt = conn.prepareStatement(sql);
++            stmt.setString(1, name);
++            stmt.setString(2, password);
++            rs = stmt.executeQuery();
              StringBuilder sb = new StringBuilder();
              while (rs.next()) {
                  sb.append("<tr><td>" + rs.getString("name") + "</td><td>" + rs.getString("secret") + "</td></tr>");
