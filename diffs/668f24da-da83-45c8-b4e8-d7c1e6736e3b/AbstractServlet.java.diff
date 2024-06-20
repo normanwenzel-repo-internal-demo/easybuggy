@@ -3,6 +3,8 @@
 @@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.core.servlets;
  
+@@ -3,0 +3,1 @@
++import org.apache.commons.text.StringEscapeUtils;
  import javax.servlet.http.HttpServlet;
  import javax.servlet.http.HttpServletRequest;
  import javax.servlet.http.HttpServletResponse;
@@ -94,7 +96,9 @@
              writer.write("</tr>");
              writer.write("</table>");
              writer.write("<hr style=\"margin-top:0px\">");
-             writer.write(htmlBody);
+@@ -94,1 +95,1 @@
+-            writer.write(htmlBody);
++writer.write(StringEscapeUtils.escapeHtml4(htmlBody));
              writer.write("</BODY>");
              writer.write("</HTML>");
  
