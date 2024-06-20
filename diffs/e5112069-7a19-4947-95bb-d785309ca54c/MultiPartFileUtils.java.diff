@@ -3,8 +3,7 @@
 @@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.core.utils;
  
-@@ -3,0 +3,2 @@
-+import java.nio.file.Paths;
+@@ -3,0 +3,1 @@
 +import java.io.File;
  import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
@@ -59,14 +58,11 @@
       *
       * @param part A part or form item that was received within a <code>multipart/form-data</code> POST request.
       */
-@@ -56,1 +58,8 @@
+@@ -56,1 +57,5 @@
 -    public static String getFileName(final Part part) {
-+      String savePath = getServletContext().getRealPath("");
-+      String fullPath = savePath + File.separator + fileName;
-+      File file = new File(fullPath);
-+      String normalizedPath = file.getCanonicalPath();
-+      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
-+        throw new IllegalArgumentException("Invalid file path.");
++      String filePath = new File(savePath + File.separator + fileName).getCanonicalPath();
++      if (!filePath.startsWith(new File(savePath).getCanonicalPath())) {
++        throw new SecurityException("Attempt to read file outside of the expected directory.");
 +      }
 +
          for (String content : part.getHeader("content-disposition").split(";")) {
