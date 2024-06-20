@@ -4,8 +4,8 @@
  package org.t246osslab.easybuggy.vulnerabilities;
  
 @@ -3,0 +3,2 @@
-+import java.nio.file.Paths;
-+import java.io.File;
++import javax.imageio.ImageIO;
++import java.awt.image.BufferedImage;
  import java.awt.image.BufferedImage;
  import java.awt.image.WritableRaster;
  import java.io.File;
@@ -85,18 +85,7 @@
              }
              boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
  
-@@ -82,1 +84,10 @@
--            // Reverse the color of the upload image
-+      String savePath = getServletContext().getRealPath("");
-+      String fullPath = savePath + File.separator + fileName;
-+      File file = new File(fullPath);
-+      String normalizedPath = file.getCanonicalPath();
-+      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
-+        req.setAttribute("errorMessage", getErrMsg("msg.invalid.file.path", locale));
-+        doGet(req, res);
-+        return;
-+      }
-+
+             // Reverse the color of the upload image
              if (!isConverted) {
                  isConverted = reverseColor(new File(savePath + File.separator + fileName).getAbsolutePath());
              }
@@ -128,7 +117,15 @@
      private boolean reverseColor(String fileName) throws IOException {
          boolean isConverted = false;
          try {
-             BufferedImage image = ImageIO.read(new File(fileName));
+@@ -114,1 +116,7 @@
+-            BufferedImage image = ImageIO.read(new File(fileName));
++      String filePath = savePath + File.separator + fileName;
++      String normalizedPath = new File(filePath).getCanonicalPath();
++      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
++        throw new SecurityException("Attempt to read file outside of the expected directory.");
++      }
++      BufferedImage image = ImageIO.read(new File(filePath));
++
              WritableRaster raster = image.getRaster();
              int[] pixelBuffer = new int[raster.getNumDataElements()];
              for (int y = 0; y < raster.getHeight(); y++) {
