@@ -76,26 +76,27 @@
              return;
          }
          try {
-@@ -76,1 +76,12 @@
+@@ -76,6 +76,11 @@
 -            String fileName = MultiPartFileUtils.getFileName(filePart);
+-            if (StringUtils.isBlank(fileName)) {
+-                doGet(req, res);
+-                return;
+-            }
+-            boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
 +      String fileName = MultiPartFileUtils.getFileName(filePart);
 +      if (StringUtils.isBlank(fileName)) {
 +          doGet(req, res);
 +          return;
 +      }
-+      String filePath = savePath + File.separator + fileName;
-+      if (!filePath.startsWith(savePath)) {
++      String normalizedPath = new File(savePath + File.separator + fileName).getCanonicalPath();
++      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
 +          doGet(req, res);
 +          return;
 +      }
 +      boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
-+
-             if (StringUtils.isBlank(fileName)) {
-                 doGet(req, res);
-                 return;
-             }
-             boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
  
+@@ -83,0 +88,1 @@
++
              if (!isConverted) {
                  isConverted = convert2GrayScale(new File(savePath + File.separator + fileName).getAbsolutePath());
              }
@@ -119,22 +120,21 @@
      }
  
      // Convert color image into gray scale image.
-     private boolean convert2GrayScale(String fileName) throws IOException {
-         boolean isConverted = false;
-         try {
-             // Convert the file into gray scale image.
-@@ -110,1 +121,9 @@
+@@ -106,6 +112,8 @@
+-    private boolean convert2GrayScale(String fileName) throws IOException {
+-        boolean isConverted = false;
+-        try {
+-            // Convert the file into gray scale image.
 -            BufferedImage image = ImageIO.read(new File(fileName));
+-            if (image == null) {
 +      boolean isConverted = false;
 +      try {
-+          // Convert the file into gray scale image.
-+          BufferedImage image = ImageIO.read(new File(filePath));
-+          if (image == null) {
-+              log.warn("Cannot read upload file as image file, file name: " + filePath);
++          String normalizedPath = new File(fileName).getCanonicalPath();
++          if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
 +              return false;
 +          }
++          BufferedImage image = ImageIO.read(new File(fileName));
 +
-             if (image == null) {
                  log.warn("Cannot read upload file as image file, file name: " + fileName);
                  return false;
              }
@@ -158,7 +158,10 @@
                  }
              }
              // Output the image
-             ImageIO.write(image, "png", new File(fileName));
+@@ -135,1 +143,2 @@
+-            ImageIO.write(image, "png", new File(fileName));
++      ImageIO.write(image, "png", new File(fileName));
++
              isConverted = true;
          } catch (Exception e) {
              // Log and ignore the exception
