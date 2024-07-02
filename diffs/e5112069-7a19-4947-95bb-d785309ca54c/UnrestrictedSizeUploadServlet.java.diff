@@ -3,8 +3,9 @@
 @@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.vulnerabilities;
  
-@@ -3,0 +3,1 @@
+@@ -3,0 +3,2 @@
 +import javax.imageio.ImageIO;
++import java.io.File;
  import java.awt.image.BufferedImage;
  import java.awt.image.WritableRaster;
  import java.io.File;
@@ -72,18 +73,14 @@
  
          try {
              // Save the file
-@@ -70,11 +71,22 @@
+@@ -70,6 +72,18 @@
 -            final Part filePart = req.getPart("file");
 -            String fileName = MultiPartFileUtils.getFileName(filePart);
 -            if (StringUtils.isBlank(fileName)) {
 -                doGet(req, res);
 -                return;
 -            } else if (!isImageFile(fileName)) {
--                req.setAttribute("errorMessage", getErrMsg("msg.not.image.file", locale));
--                doGet(req, res);
--                return;
--            }
--            boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
++      final Part filePart = req.getPart("file");
 +      String fileName = MultiPartFileUtils.getFileName(filePart);
 +      if (StringUtils.isBlank(fileName)) {
 +          doGet(req, res);
@@ -93,26 +90,25 @@
 +          doGet(req, res);
 +          return;
 +      }
-+      String fullPath = savePath + File.separator + fileName;
-+      File imageFile = new File(fullPath);
-+      String normalizedPath = imageFile.getCanonicalPath();
++      String normalizedPath = new File(savePath + File.separator + fileName).getCanonicalPath();
 +      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
 +          req.setAttribute("errorMessage", getErrMsg("msg.invalid.file.path", locale));
 +          doGet(req, res);
 +          return;
 +      }
 +      boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
-+      if (!isConverted) {
-+          isConverted = reverseColor(imageFile.getAbsolutePath());
-+      }
 +
+                 req.setAttribute("errorMessage", getErrMsg("msg.not.image.file", locale));
+                 doGet(req, res);
+                 return;
+             }
+             boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
  
-@@ -82,5 +94,0 @@
--            // Reverse the color of the upload image
--            if (!isConverted) {
--                isConverted = reverseColor(new File(savePath + File.separator + fileName).getAbsolutePath());
--            }
--
+             // Reverse the color of the upload image
+             if (!isConverted) {
+                 isConverted = reverseColor(new File(savePath + File.separator + fileName).getAbsolutePath());
+             }
+ 
              StringBuilder bodyHtml = new StringBuilder();
              if (isConverted) {
                  bodyHtml.append(getMsg("msg.reverse.color.complete", locale));
