@@ -3,8 +3,7 @@
 @@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.core.utils;
  
-@@ -3,0 +3,3 @@
-+import java.nio.file.Paths;
+@@ -3,0 +3,2 @@
 +import java.io.FileOutputStream;
 +import java.io.File;
  import org.slf4j.Logger;
@@ -37,7 +36,7 @@
          OutputStream out = null;
          InputStream in = null;
          try {
-@@ -33,1 +36,8 @@
+@@ -33,1 +35,8 @@
 -            out = new FileOutputStream(savePath + File.separator + fileName);
 +      String fullPath = savePath + File.separator + fileName;
 +      File file = new File(fullPath);
@@ -45,7 +44,7 @@
 +      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
 +        throw new SecurityException("Attempt to write file outside of the save path.");
 +      }
-+      FileOutputStream out = new FileOutputStream(file);
++      out = new FileOutputStream(file);
 +
              in = part.getInputStream();
              int read;
