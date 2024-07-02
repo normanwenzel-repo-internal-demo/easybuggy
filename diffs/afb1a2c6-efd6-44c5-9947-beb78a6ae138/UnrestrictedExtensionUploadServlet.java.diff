@@ -76,15 +76,31 @@
              return;
          }
          try {
-             String fileName = MultiPartFileUtils.getFileName(filePart);
-             if (StringUtils.isBlank(fileName)) {
-                 doGet(req, res);
-                 return;
-             }
-             boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
+@@ -76,6 +76,14 @@
+-            String fileName = MultiPartFileUtils.getFileName(filePart);
+-            if (StringUtils.isBlank(fileName)) {
+-                doGet(req, res);
+-                return;
+-            }
+-            boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
++      String fileName = MultiPartFileUtils.getFileName(filePart);
++      if (StringUtils.isBlank(fileName)) {
++          doGet(req, res);
++          return;
++      }
++      if (!fileName.toLowerCase().endsWith(".png")) {
++          req.setAttribute("errorMessage", getErrMsg("msg.invalid.file.extension", locale));
++          doGet(req, res);
++          return;
++      }
++      boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
++      if (!isConverted) {
++          isConverted = convert2GrayScale(new File(savePath + File.separator + fileName).getAbsolutePath());
++      }
  
-             if (!isConverted) {
-                 isConverted = convert2GrayScale(new File(savePath + File.separator + fileName).getAbsolutePath());
+@@ -83,2 +91,0 @@
+-            if (!isConverted) {
+-                isConverted = convert2GrayScale(new File(savePath + File.separator + fileName).getAbsolutePath());
              }
  
              StringBuilder bodyHtml = new StringBuilder();
@@ -110,13 +126,6 @@
          boolean isConverted = false;
          try {
              // Convert the file into gray scale image.
-@@ -110,0 +110,6 @@
-+      String canonicalPath = new File(fileName).getCanonicalPath();
-+      if (!canonicalPath.startsWith(new File(savePath).getCanonicalPath())) {
-+        log.warn("Attempt to read file outside of the expected directory: " + fileName);
-+        return false;
-+      }
-+
              BufferedImage image = ImageIO.read(new File(fileName));
              if (image == null) {
                  log.warn("Cannot read upload file as image file, file name: " + fileName);
