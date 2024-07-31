@@ -76,30 +76,31 @@
              return;
          }
          try {
-@@ -76,1 +76,14 @@
+@@ -76,6 +76,14 @@
 -            String fileName = MultiPartFileUtils.getFileName(filePart);
+-            if (StringUtils.isBlank(fileName)) {
+-                doGet(req, res);
+-                return;
+-            }
+-            boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
 +      String fileName = MultiPartFileUtils.getFileName(filePart);
 +      if (StringUtils.isBlank(fileName)) {
 +          doGet(req, res);
 +          return;
 +      }
-+      String filePath = savePath + File.separator + fileName;
-+      File file = new File(filePath);
-+      String normalizedPath = file.getCanonicalPath();
-+      if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
++      if (!fileName.toLowerCase().endsWith(".png")) {
++          req.setAttribute("errorMessage", getErrMsg("msg.invalid.file.extension", locale));
 +          doGet(req, res);
 +          return;
 +      }
 +      boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
-+
-             if (StringUtils.isBlank(fileName)) {
-                 doGet(req, res);
-                 return;
-             }
-             boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
++      if (!isConverted) {
++          isConverted = convert2GrayScale(new File(savePath + File.separator + fileName).getAbsolutePath());
++      }
  
-             if (!isConverted) {
-                 isConverted = convert2GrayScale(new File(savePath + File.separator + fileName).getAbsolutePath());
+@@ -83,2 +91,0 @@
+-            if (!isConverted) {
+-                isConverted = convert2GrayScale(new File(savePath + File.separator + fileName).getAbsolutePath());
              }
  
              StringBuilder bodyHtml = new StringBuilder();
@@ -121,17 +122,7 @@
      }
  
      // Convert color image into gray scale image.
-@@ -106,1 +119,9 @@
--    private boolean convert2GrayScale(String fileName) throws IOException {
-+      boolean isConverted = false;
-+      try {
-+          // Convert the file into gray scale image.
-+          BufferedImage image = ImageIO.read(file);
-+          if (image == null) {
-+              log.warn("Cannot read upload file as image file, file name: " + fileName);
-+              return false;
-+          }
-+
+     private boolean convert2GrayScale(String fileName) throws IOException {
          boolean isConverted = false;
          try {
              // Convert the file into gray scale image.
