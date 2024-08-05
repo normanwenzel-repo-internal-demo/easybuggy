@@ -1,5 +1,7 @@
 package org.t246osslab.easybuggy.vulnerabilities;
 
+import java.nio.file.Paths;
+import java.io.File;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,8 +45,18 @@ public class NullByteInjectionServlet extends AbstractServlet {
             // Get absolute path of the web application
             String appPath = getServletContext().getRealPath("");
 
-            File file = new File(appPath + File.separator + "pdf" + File.separator + fileName);
-            if (!file.exists()) {
+      String fullPath = appPath + File.separator + "pdf" + File.separator + filename;
+      File file = new File(fullPath);
+      String normalizedPath = file.getCanonicalPath();
+      if (!normalizedPath.startsWith(new File(appPath).getCanonicalPath())) {
+        responseToClient(req, res, getMsg("title.nullbyteinjection.page", locale), bodyHtml.toString());
+        return;
+      }
+      if (!file.exists()) {
+        responseToClient(req, res, getMsg("title.nullbyteinjection.page", locale), bodyHtml.toString());
+        return;
+      }
+
                 responseToClient(req, res, getMsg("title.nullbyteinjection.page", locale), bodyHtml.toString());
                 return;
             }
