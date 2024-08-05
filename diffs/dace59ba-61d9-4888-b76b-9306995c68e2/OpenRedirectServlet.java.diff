@@ -3,6 +3,8 @@
 @@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.vulnerabilities;
  
+@@ -3,0 +3,1 @@
++import java.net.URL;
  import java.io.IOException;
  import java.util.Locale;
  
@@ -39,13 +41,7 @@
          HttpSession session = req.getSession(true);
          if (isAccountLocked(userid)) {
              session.setAttribute("authNMsg", getErrMsg("msg.authentication.fail", locale));
-@@ -39,1 +39,5 @@
--            res.sendRedirect("/openredirect/login" + loginQueryString);
-+              if (loginQueryString != null && loginQueryString.startsWith("/") && !loginQueryString.startsWith("//") && !loginQueryString.contains("://")) {
-+                  res.sendRedirect("/openredirect/login" + loginQueryString);
-+              } else {
-+                  throw new IOException("URL is not local");
-+              }
+             res.sendRedirect("/openredirect/login" + loginQueryString);
          } else if (authUser(userid, password)) {
              /* Reset account lock count */
              resetAccountLock(userid);
@@ -55,7 +51,13 @@
              
              String gotoUrl = req.getParameter("goto");
              if (gotoUrl != null) {
-                 res.sendRedirect(gotoUrl);
+@@ -49,1 +50,5 @@
+-                res.sendRedirect(gotoUrl);
++                  if (gotoUrl != null && gotoUrl.startsWith("/") && !gotoUrl.startsWith("//") && !gotoUrl.contains("://")) {
++                      res.sendRedirect(gotoUrl);
++                  } else {
++                      throw new IOException("URL is not local");
++                  }
              } else {
                  String target = (String) session.getAttribute("target");
                  if (target == null) {
