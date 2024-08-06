@@ -83,19 +83,8 @@
                  doGet(req, res);
                  return;
              }
-@@ -81,1 +82,8 @@
--            boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
-+              boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
-+              String fullPath = savePath + File.separator + fileName;
-+              String normalizedPath = new File(fullPath).getCanonicalPath();
-+              if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
-+                  req.setAttribute("errorMessage", "Error: Attempt to write file outside of the base directory.");
-+                  doGet(req, res);
-+                  return;
-+              }
+             boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
  
-@@ -83,0 +91,1 @@
-+
              if (!isConverted) {
                  isConverted = convert2GrayScale(new File(savePath + File.separator + fileName).getAbsolutePath());
              }
@@ -123,8 +112,17 @@
          boolean isConverted = false;
          try {
              // Convert the file into gray scale image.
-             BufferedImage image = ImageIO.read(new File(fileName));
-             if (image == null) {
+@@ -110,2 +111,8 @@
+-            BufferedImage image = ImageIO.read(new File(fileName));
+-            if (image == null) {
++              BufferedImage image = null;
++              File file = new File(fileName);
++              String normalizedPath = file.getCanonicalPath();
++              if (normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
++                  image = ImageIO.read(file);
++              }
++              if (image == null) {
++
                  log.warn("Cannot read upload file as image file, file name: " + fileName);
                  return false;
              }
