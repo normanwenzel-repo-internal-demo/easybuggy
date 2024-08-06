@@ -83,17 +83,7 @@
                  doGet(req, res);
                  return;
              }
-@@ -80,1 +82,9 @@
--            boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
-+              boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
-+              String fullPath = savePath + File.separator + fileName;
-+              String normalizedPath = new File(fullPath).getCanonicalPath();
-+              if (!normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
-+                  req.setAttribute("errorMessage", getErrMsg("msg.invalid.file.path", locale));
-+                  doGet(req, res);
-+                  return;
-+              }
-+
+             boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
  
              // Reverse the color of the upload image
              if (!isConverted) {
@@ -127,7 +117,17 @@
      private boolean reverseColor(String fileName) throws IOException {
          boolean isConverted = false;
          try {
-             BufferedImage image = ImageIO.read(new File(fileName));
+@@ -114,1 +116,9 @@
+-            BufferedImage image = ImageIO.read(new File(fileName));
++              BufferedImage image = null;
++              File file = new File(fileName);
++              String normalizedPath = file.getCanonicalPath();
++              if (normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
++                  image = ImageIO.read(file);
++              } else {
++                  throw new IOException("Attempt to read file outside of the base directory.");
++              }
++
              WritableRaster raster = image.getRaster();
              int[] pixelBuffer = new int[raster.getNumDataElements()];
              for (int y = 0; y < raster.getHeight(); y++) {
