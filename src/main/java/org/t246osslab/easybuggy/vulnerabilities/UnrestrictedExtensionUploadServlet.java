@@ -1,5 +1,6 @@
 package org.t246osslab.easybuggy.vulnerabilities;
 
+import java.nio.file.Paths;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -107,8 +108,14 @@ public class UnrestrictedExtensionUploadServlet extends AbstractServlet {
         boolean isConverted = false;
         try {
             // Convert the file into gray scale image.
-            BufferedImage image = ImageIO.read(new File(fileName));
-            if (image == null) {
+              BufferedImage image = null;
+              File file = new File(fileName);
+              String normalizedPath = file.getCanonicalPath();
+              if (normalizedPath.startsWith(new File(savePath).getCanonicalPath())) {
+                  image = ImageIO.read(file);
+              }
+              if (image == null) {
+
                 log.warn("Cannot read upload file as image file, file name: " + fileName);
                 return false;
             }
