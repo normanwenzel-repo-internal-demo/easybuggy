@@ -39,7 +39,13 @@
          HttpSession session = req.getSession(true);
          if (isAccountLocked(userid)) {
              session.setAttribute("authNMsg", getErrMsg("msg.authentication.fail", locale));
-             res.sendRedirect("/openredirect/login" + loginQueryString);
+@@ -39,1 +39,5 @@
+-            res.sendRedirect("/openredirect/login" + loginQueryString);
++              if (loginQueryString != null && loginQueryString.startsWith("/") && !loginQueryString.startsWith("//") && !loginQueryString.contains("://")) {
++                  res.sendRedirect("/openredirect/login" + loginQueryString);
++              } else {
++                  throw new IOException("URL is not local");
++              }
          } else if (authUser(userid, password)) {
              /* Reset account lock count */
              resetAccountLock(userid);
@@ -64,13 +70,7 @@
              incrementLoginFailedCount(userid);
              
              session.setAttribute("authNMsg", getErrMsg("msg.authentication.fail", locale));
-@@ -64,1 +64,5 @@
--            res.sendRedirect("/openredirect/login" + loginQueryString);
-+              if (loginQueryString != null && loginQueryString.startsWith("/") && !loginQueryString.startsWith("//") && !loginQueryString.contains("://")) {
-+                  res.sendRedirect("/openredirect/login" + loginQueryString);
-+              } else {
-+                  throw new IOException("URL is not local");
-+              }
+             res.sendRedirect("/openredirect/login" + loginQueryString);
          }
      }
  }
