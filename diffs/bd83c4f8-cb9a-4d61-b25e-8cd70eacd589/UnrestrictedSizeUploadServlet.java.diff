@@ -1,9 +1,5 @@
---- original
-+++ remediated
-@@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.vulnerabilities;
  
-@@ -3,0 +3,1 @@
 +import java.nio.file.Paths;
  import java.awt.image.BufferedImage;
  import java.awt.image.WritableRaster;
@@ -116,7 +112,6 @@
      private boolean reverseColor(String fileName) throws IOException {
          boolean isConverted = false;
          try {
-@@ -114,1 +115,9 @@
 -            BufferedImage image = ImageIO.read(new File(fileName));
 +              BufferedImage image = null;
 +              File file = new File(fileName);
