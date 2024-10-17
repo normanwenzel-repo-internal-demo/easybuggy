@@ -1,9 +1,5 @@
---- original
-+++ remediated
-@@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.vulnerabilities;
  
-@@ -3,0 +3,1 @@
 +import java.nio.file.Paths;
  import java.awt.image.BufferedImage;
  import java.io.File;
@@ -112,7 +108,6 @@
          boolean isConverted = false;
          try {
              // Convert the file into gray scale image.
-@@ -110,2 +111,8 @@
 -            BufferedImage image = ImageIO.read(new File(fileName));
 -            if (image == null) {
 +              BufferedImage image = null;
