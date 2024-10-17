@@ -1,9 +1,5 @@
---- original
-+++ remediated
-@@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.vulnerabilities;
  
-@@ -3,0 +3,1 @@
 +import java.nio.file.Paths;
  import java.awt.image.BufferedImage;
  import java.awt.image.WritableRaster;
@@ -82,7 +78,6 @@
                  doGet(req, res);
                  return;
              }
-@@ -80,1 +81,8 @@
 -            boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
 +              boolean isConverted = MultiPartFileUtils.writeFile(filePart, savePath, fileName);
 +              String fullPath = savePath + File.separator + fileName;
@@ -93,7 +88,6 @@
 +                  return;
 +              }
  
-@@ -82,0 +90,1 @@
 +
              // Reverse the color of the upload image
              if (!isConverted) {
