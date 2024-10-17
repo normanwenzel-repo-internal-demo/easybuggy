@@ -1,10 +1,6 @@
---- original
-+++ remediated
-@@ -0,0 +0,0 @@
  
  package org.t246osslab.easybuggy.vulnerabilities;
  
-@@ -4,0 +4,1 @@
 +import java.sql.PreparedStatement;
  import java.io.IOException;
  import java.sql.Connection;
@@ -64,17 +60,14 @@
      }
  
      private String selectUsers(String name, String password, HttpServletRequest req) {
-@@ -62,1 +63,0 @@
 -        
          Connection conn = null;
-@@ -64,1 +64,1 @@
 -        Statement stmt = null;
 +        PreparedStatement pstmt = null;
          ResultSet rs = null;
          String result = getErrMsg("msg.error.user.not.exist", req.getLocale());
          try {
              conn = DBClient.getConnection();
-@@ -69,3 +69,5 @@
 -            stmt = conn.createStatement();
 -            rs = stmt.executeQuery("SELECT name, secret FROM users WHERE ispublic = 'true' AND name='" + name
 -                    + "' AND password='" + password + "'");
@@ -87,7 +80,6 @@
              while (rs.next()) {
                  sb.append("<tr><td>" + rs.getString("name") + "</td><td>" + rs.getString("secret") + "</td></tr>");
              }
-@@ -76,0 +78,10 @@
 +            result = sb.toString();
 +        } catch (SQLException e) {
 +            log.error("Exception occurs: ", e);
