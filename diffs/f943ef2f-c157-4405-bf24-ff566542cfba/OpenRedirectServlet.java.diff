@@ -1,9 +1,5 @@
---- original
-+++ remediated
-@@ -0,0 +0,0 @@
  package org.t246osslab.easybuggy.vulnerabilities;
  
-@@ -3,0 +3,1 @@
 +import java.net.URL;
  import java.io.IOException;
  import java.util.Locale;
@@ -51,7 +47,6 @@
              
              String gotoUrl = req.getParameter("goto");
              if (gotoUrl != null) {
-@@ -49,1 +50,5 @@
 -                res.sendRedirect(gotoUrl);
 +                  if (gotoUrl != null && gotoUrl.startsWith("/") && !gotoUrl.startsWith("//") && !gotoUrl.contains("://")) {
 +                      res.sendRedirect(gotoUrl);
