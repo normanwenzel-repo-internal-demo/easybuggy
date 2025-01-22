@@ -20,7 +20,7 @@ import org.t246osslab.easybuggy.core.utils.Closer;
 
 @SuppressWarnings("serial")
 @WebServlet(urlPatterns = { "/sqlijc" })
-public class SQLInjectionServlet extends AbstractServlet {
+public class SQLInjectionDemo extends AbstractServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
