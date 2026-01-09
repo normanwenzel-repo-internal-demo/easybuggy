@@ -15,7 +15,6 @@
     "findingSuppressions": "requireApproval"
   },
 
-
   "checkRunSettings": {
     "vulnerableCheckRunConclusionLevel": "failure",
     "displayMode": "diff",
