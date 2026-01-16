@@ -30,7 +30,7 @@
     "issueType": "DEPENDENCY"
   },
   "issueSettingsSAST": {
-    "minSeverityLevel": "high",
+    "minSeverityLevel": "medium",
     "issueType": "finding"
   },
   "remediateSettings": {
