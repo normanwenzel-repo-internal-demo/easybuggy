@@ -3,6 +3,7 @@
     "configMode": "AUTO",
     "configExternalURL": "",
     "projectToken": "",
+    "exploitability": true
     "baseBranches": ["master", "RamiDemo1"]
   },
   "scanSettingsSAST": {
