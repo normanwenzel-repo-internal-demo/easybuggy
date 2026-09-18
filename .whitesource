@@ -4,7 +4,7 @@
     "configExternalURL": "",
     "projectToken": "",
     "exploitability": true
-    "baseBranches": ["master", "RamiDemo1"]
+    "baseBranches": ["master"]
   },
   "scanSettingsSAST": {
     "enableScan": true,
@@ -32,7 +32,7 @@
   },
   "issueSettingsSAST": {
     "minSeverityLevel": "medium",
-    "issueType": "finding"
+    "issueType": "repo"
   },
   "remediateSettings": {
     "workflowRules": {
