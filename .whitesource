@@ -3,7 +3,7 @@
     "configMode": "AUTO",
     "configExternalURL": "",
     "projectToken": "",
-    "exploitability": true
+    "exploitability": true,
     "baseBranches": ["master"]
   },
   "scanSettingsSAST": {
@@ -15,8 +15,6 @@
     "snippetSize": 10,
     "findingSuppressions": "requireApproval"
   },
-
-
   "checkRunSettings": {
     "vulnerableCheckRunConclusionLevel": "failure",
     "displayMode": "diff",
@@ -38,14 +36,6 @@
     "workflowRules": {
       "enabled": true
     }
-  },
-   "imageSettings":{
-       "imageTracing":{
-           "enableImageTracingPR": false,
-           "addRepositoryCoordinate": false,
-           "addDockerfilePath": false,
-           "addMendIdentifier": false
-       }
-   }
+  }
 }
 
